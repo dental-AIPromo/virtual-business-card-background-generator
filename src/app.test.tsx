@@ -21,6 +21,9 @@ describe("App", () => {
     expect(screen.getByLabelText("名前（よみがな）")).toBeInTheDocument();
     expect(screen.getByLabelText("メールアドレス")).toBeInTheDocument();
     expect(screen.getByText("背景画像を選ぶとプレビューを表示します。")).toBeInTheDocument();
+    expect(
+      screen.getByText("Copyright © エンパワーヘルスケア株式会社 All Rights Reserved.")
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "PNG をダウンロード" })).toBeDisabled();
   });
 

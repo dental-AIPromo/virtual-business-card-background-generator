@@ -214,6 +214,10 @@ export default function App() {
           />
         </div>
       </section>
+
+      <footer className="page-footer">
+        Copyright © エンパワーヘルスケア株式会社 All Rights Reserved.
+      </footer>
     </main>
   );
 }
