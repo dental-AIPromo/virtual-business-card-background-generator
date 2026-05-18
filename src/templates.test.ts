@@ -1,0 +1,27 @@
+import { describe, expect, it } from "vitest";
+
+import { DEFAULT_TEMPLATE_ID, getTemplateById, templates } from "./templates";
+
+describe("templates", () => {
+  it("初期テンプレートとして標準テンプレートを持つ", () => {
+    expect(templates).toHaveLength(1);
+    expect(DEFAULT_TEMPLATE_ID).toBe("ehc-virtual-card");
+
+    const template = getTemplateById(DEFAULT_TEMPLATE_ID);
+
+    expect(template).toMatchObject({
+      id: "ehc-virtual-card",
+      name: "標準テンプレート",
+      background: {
+        width: 1920,
+        height: 1080
+      }
+    });
+    expect(template.fields.department.fontSize).toBe(30);
+    expect(template.fields.title.fontSize).toBe(30);
+    expect(template.fields.title.y).toBe(350);
+    expect(template.fields.name.fontSize).toBe(100);
+    expect(template.fields.nameKana.fontSize).toBe(50);
+    expect(template.fields.email.x).toBe(50);
+  });
+});
