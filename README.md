@@ -8,6 +8,8 @@ Copyright 2026 エンパワーヘルスケア株式会社
 バーチャル名刺背景をブラウザ上で作るツールです。  
 利用者が選んだ背景画像に対して、部署名・役職名・名前・名前（よみがな）・メールアドレスを重ねて、PNG をダウンロードできます。
 
+公開ページ: [https://dental-aipromo.github.io/virtual-business-card-background-generator/](https://dental-aipromo.github.io/virtual-business-card-background-generator/)
+
 ## 使い方
 
 1. 公開ページを開きます
