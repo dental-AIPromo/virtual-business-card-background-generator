@@ -28,7 +28,7 @@ describe("buildRenderModel", () => {
     expect(model.lines[1]).toMatchObject({
       text: "sample@example.com",
       x: 50,
-      y: 620
+      y: 630
     });
   });
 });

@@ -10,7 +10,7 @@ describe("App", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "バーチャル名刺背景ジェネレーター"
+        name: "バーチャル名刺作成ツール"
       })
     ).toBeInTheDocument();
     expect(screen.getByLabelText("テンプレート")).toBeInTheDocument();
@@ -18,7 +18,7 @@ describe("App", () => {
     expect(screen.getByLabelText("部署名")).toBeInTheDocument();
     expect(screen.getByLabelText("役職名")).toBeInTheDocument();
     expect(screen.getByLabelText("名前")).toBeInTheDocument();
-    expect(screen.getByLabelText("名前（よみがな）")).toBeInTheDocument();
+    expect(screen.getByLabelText("よみがな（ローマ字）")).toBeInTheDocument();
     expect(screen.getByLabelText("メールアドレス")).toBeInTheDocument();
     expect(screen.getByText("背景画像を選ぶとプレビューを表示します。")).toBeInTheDocument();
     expect(

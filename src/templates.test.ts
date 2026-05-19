@@ -23,5 +23,6 @@ describe("templates", () => {
     expect(template.fields.name.fontSize).toBe(100);
     expect(template.fields.nameKana.fontSize).toBe(50);
     expect(template.fields.email.x).toBe(50);
+    expect(template.fields.email.y).toBe(630);
   });
 });

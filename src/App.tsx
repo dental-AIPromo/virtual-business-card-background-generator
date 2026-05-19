@@ -19,7 +19,7 @@ const fieldLabels: Record<FieldKey, string> = {
   department: "部署名",
   position: "役職名",
   name: "名前",
-  nameKana: "名前（よみがな）",
+  nameKana: "よみがな（ローマ字）",
   email: "メールアドレス"
 };
 
@@ -137,7 +137,7 @@ export default function App() {
     <main className="page">
       <section className="panel form-panel">
         <p className="eyebrow">GitHub Pages / Browser Only</p>
-        <h1>バーチャル名刺背景ジェネレーター</h1>
+        <h1>バーチャル名刺作成ツール</h1>
         <p className="lead">
           背景画像へ文字列を重ねて、会議用の背景画像を作成できます。
           入力内容はブラウザ内だけで扱い、保存しません。

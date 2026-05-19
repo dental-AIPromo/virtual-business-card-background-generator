@@ -1,12 +1,12 @@
-# バーチャル名刺背景ジェネレーター
+# バーチャル名刺作成ツール
 
 Copyright 2026 エンパワーヘルスケア株式会社
 
 このリポジトリは `Apache License 2.0` で公開しています。
 著作権者は エンパワーヘルスケア株式会社 です。詳細は [LICENSE](./LICENSE) と [NOTICE](./NOTICE) を参照してください。
 
-バーチャル名刺背景をブラウザ上で作るツールです。  
-利用者が選んだ背景画像に対して、部署名・役職名・名前・名前（よみがな）・メールアドレスを重ねて、PNG をダウンロードできます。
+バーチャル名刺画像をブラウザ上で作るツールです。  
+利用者が選んだ背景画像に対して、部署名・役職名・名前・よみがな（ローマ字）・メールアドレスを重ねて、PNG をダウンロードできます。
 
 公開ページ: [https://dental-aipromo.github.io/virtual-business-card-background-generator/](https://dental-aipromo.github.io/virtual-business-card-background-generator/)
 
@@ -32,7 +32,7 @@ Copyright 2026 エンパワーヘルスケア株式会社
 - 部署名
 - 役職名
 - 名前
-- 名前（よみがな）
+- よみがな（ローマ字）
 - メールアドレス
 
 ## 動作

@@ -68,7 +68,7 @@ export const templates: TemplateDefinition[] = [
       },
       email: {
         x: 50,
-        y: 620,
+        y: 630,
         width: 540,
         fontSize: 30,
         minFontSize: 18,
