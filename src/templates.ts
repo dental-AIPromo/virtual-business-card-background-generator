@@ -18,7 +18,7 @@ export const templates: TemplateDefinition[] = [
       color: "#FFFFFFD1"
     },
     badges: {
-      x: 65,
+      x: 60,
       y: 735,
       areaWidth: 650,
       width: 190,
