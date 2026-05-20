@@ -23,7 +23,7 @@ describe("templates", () => {
         height: 470
       },
       badges: {
-        x: 60,
+        x: 65,
         y: 735,
         areaWidth: 650,
         width: 190,
