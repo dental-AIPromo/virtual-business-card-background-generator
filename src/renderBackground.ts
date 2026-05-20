@@ -83,13 +83,7 @@ async function drawBadges(
     };
   });
 
-  const totalWidth =
-    badgeLayouts.reduce((sum, badgeLayout) => sum + badgeLayout.width, 0) +
-    gap * (badgeLayouts.length - 1);
-  const startX =
-    template.overlay.x +
-    template.badges.x +
-    Math.max(0, Math.floor((availableWidth - totalWidth) / 2));
+  const startX = template.overlay.x + template.badges.x;
 
   let currentX = startX;
   badgeLayouts.forEach(({ image, width, height }) => {

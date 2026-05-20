@@ -115,10 +115,11 @@ describe("drawTemplate", () => {
     expect(scratchDrawImage).toHaveBeenCalledTimes(5);
     const badgeCalls = scratchDrawImage.mock.calls.slice(1, 5);
     expect(badgeCalls).toHaveLength(4);
+    expect(badgeCalls[0][1]).toBe(20);
     expect(badgeCalls[0][1]).toBeLessThan(badgeCalls[1][1]);
     expect(badgeCalls[1][1]).toBeLessThan(badgeCalls[2][1]);
     expect(badgeCalls[2][1]).toBeLessThan(badgeCalls[3][1]);
-    expect(badgeCalls.every((call) => call[2] === 670)).toBe(true);
+    expect(badgeCalls.every((call) => call[2] === 735)).toBe(true);
     expect(previewContext.drawImage).toHaveBeenCalledTimes(1);
   });
 });

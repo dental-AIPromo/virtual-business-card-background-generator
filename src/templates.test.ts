@@ -20,13 +20,13 @@ describe("templates", () => {
         x: 20,
         y: 250,
         width: 600,
-        height: 670
+        height: 470
       },
       badges: {
         x: 0,
-        y: 670,
-        width: 310,
-        maxHeight: 220,
+        y: 735,
+        width: 320,
+        maxHeight: 230,
         maxCount: 4
       }
     });
