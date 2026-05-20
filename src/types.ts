@@ -40,6 +40,14 @@ export type TemplateDefinition = {
     height: number;
     color: string;
   };
+  badges: {
+    x: number;
+    y: number;
+    width: number;
+    maxHeight: number;
+    gap: number;
+    maxCount: number;
+  };
   fields: {
     department: FieldLayout;
     title: FieldLayout;
@@ -62,4 +70,10 @@ export type RenderLine = {
 
 export type RenderModel = {
   lines: RenderLine[];
+};
+
+export type BadgeImageSource = {
+  id: string;
+  name: string;
+  imageSrc: string;
 };

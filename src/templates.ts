@@ -14,8 +14,16 @@ export const templates: TemplateDefinition[] = [
       x: 20,
       y: 250,
       width: 600,
-      height: 470,
+      height: 670,
       color: "#FFFFFFD1"
+    },
+    badges: {
+      x: 0,
+      y: 670,
+      width: 310,
+      maxHeight: 220,
+      gap: 12,
+      maxCount: 4
     },
     fields: {
       department: {

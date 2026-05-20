@@ -32,6 +32,10 @@ class MockImage {
   decoding = "async";
   onload: null | (() => void) = null;
   onerror: null | (() => void) = null;
+  width = 365;
+  height = 254;
+  naturalWidth = 365;
+  naturalHeight = 254;
   private currentSrc = "";
 
   get src() {

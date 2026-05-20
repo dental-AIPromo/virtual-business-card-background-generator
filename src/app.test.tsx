@@ -15,6 +15,9 @@ describe("App", () => {
     ).toBeInTheDocument();
     expect(screen.getByLabelText("テンプレート")).toBeInTheDocument();
     expect(screen.getByLabelText("背景画像")).toBeInTheDocument();
+    expect(screen.getByText("バッジ画像")).toBeInTheDocument();
+    expect(screen.getByLabelText("バッジ画像を選ぶ")).toBeInTheDocument();
+    expect(screen.getByText("選択中のバッジはありません。")).toBeInTheDocument();
     expect(screen.getByLabelText("部署名")).toBeInTheDocument();
     expect(screen.getByLabelText("役職名")).toBeInTheDocument();
     expect(screen.getByLabelText("名前")).toBeInTheDocument();
@@ -43,5 +46,27 @@ describe("App", () => {
           .some((button) => !button.hasAttribute("disabled"))
       ).toBe(true);
     });
+  });
+
+  it("バッジ画像は4枚まで選べる", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const input = screen.getByLabelText("バッジ画像を選ぶ");
+    const files = [
+      new File(["badge-1"], "badge-1.png", { type: "image/png" }),
+      new File(["badge-2"], "badge-2.png", { type: "image/png" }),
+      new File(["badge-3"], "badge-3.png", { type: "image/png" }),
+      new File(["badge-4"], "badge-4.png", { type: "image/png" }),
+      new File(["badge-5"], "badge-5.png", { type: "image/png" })
+    ];
+
+    await user.upload(input, files);
+
+    expect(screen.getByText("badge-1.png")).toBeInTheDocument();
+    expect(screen.getByText("badge-2.png")).toBeInTheDocument();
+    expect(screen.getByText("badge-3.png")).toBeInTheDocument();
+    expect(screen.getByText("badge-4.png")).toBeInTheDocument();
+    expect(screen.queryByText("badge-5.png")).not.toBeInTheDocument();
   });
 });
