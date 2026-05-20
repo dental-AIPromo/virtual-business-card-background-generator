@@ -1,6 +1,6 @@
 import { buildRenderModel } from "./renderModel";
 import { fitTextToField } from "./textLayout";
-import type { FormValues, TemplateDefinition } from "./types";
+import type { BadgeImageSource, FormValues, TemplateDefinition } from "./types";
 
 const imageCache = new Map<string, HTMLImageElement>();
 
@@ -44,9 +44,64 @@ async function ensureFontReady(template: TemplateDefinition): Promise<void> {
   await document.fonts.ready;
 }
 
+async function drawBadges(
+  ctx: CanvasRenderingContext2D,
+  badgeImages: BadgeImageSource[],
+  template: TemplateDefinition
+): Promise<void> {
+  const selectedBadges = badgeImages.slice(0, template.badges.maxCount);
+
+  if (selectedBadges.length === 0) {
+    return;
+  }
+
+  const availableWidth = template.overlay.width - template.badges.x * 2;
+  const gap = template.badges.gap;
+  const badgeSlotWidth = Math.min(
+    template.badges.width,
+    Math.floor((availableWidth - gap * (selectedBadges.length - 1)) / selectedBadges.length)
+  );
+
+  const loadedBadges = await Promise.all(
+    selectedBadges.map(async (badgeImage) => ({
+      badgeImage,
+      image: await loadImage(badgeImage.imageSrc)
+    }))
+  );
+
+  const badgeLayouts = loadedBadges.map(({ image }) => {
+    const sourceWidth = image.naturalWidth || image.width;
+    const sourceHeight = image.naturalHeight || image.height;
+    const widthByHeight = Math.floor((template.badges.maxHeight * sourceWidth) / sourceHeight);
+    const width = Math.min(badgeSlotWidth, widthByHeight);
+    const height = Math.round((width * sourceHeight) / sourceWidth);
+
+    return {
+      image,
+      width,
+      height
+    };
+  });
+
+  const totalWidth =
+    badgeLayouts.reduce((sum, badgeLayout) => sum + badgeLayout.width, 0) +
+    gap * (badgeLayouts.length - 1);
+  const startX =
+    template.overlay.x +
+    template.badges.x +
+    Math.max(0, Math.floor((availableWidth - totalWidth) / 2));
+
+  let currentX = startX;
+  badgeLayouts.forEach(({ image, width, height }) => {
+    ctx.drawImage(image, currentX, template.badges.y, width, height);
+    currentX += width + gap;
+  });
+}
+
 export async function drawTemplate(
   canvas: HTMLCanvasElement,
   backgroundImageSrc: string,
+  badgeImages: BadgeImageSource[],
   values: FormValues,
   template: TemplateDefinition,
   isCurrent: () => boolean = () => true
@@ -98,6 +153,8 @@ export async function drawTemplate(
       );
     });
   }
+
+  await drawBadges(ctx, badgeImages, template);
 
   if (!isCurrent()) {
     throw new Error("A newer preview render is already in progress");

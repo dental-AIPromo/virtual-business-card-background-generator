@@ -2,7 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { drawTemplate } from "./renderBackground";
 import { DEFAULT_TEMPLATE_ID, getTemplateById, templates } from "./templates";
-import type { FormValues } from "./types";
+import type { BadgeImageSource, FormValues } from "./types";
 import "./styles.css";
 
 const initialValues: FormValues = {
@@ -13,9 +13,9 @@ const initialValues: FormValues = {
   email: ""
 };
 
-type FieldKey = keyof FormValues;
+type TextFieldKey = "department" | "position" | "name" | "nameKana" | "email";
 
-const fieldLabels: Record<FieldKey, string> = {
+const fieldLabels: Record<TextFieldKey, string> = {
   department: "部署名",
   position: "役職名",
   name: "名前",
@@ -29,9 +29,11 @@ export default function App() {
   const [status, setStatus] = useState("背景画像を選ぶとプレビューを表示します。");
   const [previewReady, setPreviewReady] = useState(false);
   const [backgroundImageUrl, setBackgroundImageUrl] = useState<string | null>(null);
+  const [badgeImages, setBadgeImages] = useState<BadgeImageSource[]>([]);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const renderVersionRef = useRef(0);
   const backgroundObjectUrlRef = useRef<string | null>(null);
+  const badgeObjectUrlsRef = useRef<string[]>([]);
   const previewId = useId();
 
   const template = useMemo(() => getTemplateById(templateId), [templateId]);
@@ -58,11 +60,12 @@ export default function App() {
     renderVersionRef.current += 1;
     const renderVersion = renderVersionRef.current;
     setPreviewReady(false);
-    setStatus("プレビューを更新中です。");
+      setStatus("プレビューを更新中です。");
 
     void drawTemplate(
       canvas,
       backgroundImageUrl,
+      badgeImages,
       values,
       template,
       () => renderVersion === renderVersionRef.current
@@ -83,15 +86,19 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [backgroundImageUrl, template, values]);
+  }, [backgroundImageUrl, badgeImages, template, values]);
 
   useEffect(() => () => {
     if (backgroundObjectUrlRef.current) {
       URL.revokeObjectURL(backgroundObjectUrlRef.current);
     }
+
+    badgeObjectUrlsRef.current.forEach((url) => {
+      URL.revokeObjectURL(url);
+    });
   }, []);
 
-  function handleChange(key: FieldKey, nextValue: string) {
+  function handleChange(key: TextFieldKey, nextValue: string) {
     setValues((current) => ({
       ...current,
       [key]: nextValue
@@ -113,6 +120,26 @@ export default function App() {
     backgroundObjectUrlRef.current = nextUrl;
     setBackgroundImageUrl(nextUrl);
     setStatus("背景画像を読み込み中です。");
+  }
+
+  function handleBadgeImageChange(fileList: FileList | null) {
+    badgeObjectUrlsRef.current.forEach((url) => {
+      URL.revokeObjectURL(url);
+    });
+
+    const files = Array.from(fileList ?? []).slice(0, template.badges.maxCount);
+    const nextBadgeImages = files.map((file, index) => {
+      const imageSrc = URL.createObjectURL(file);
+
+      return {
+        id: `badge-${index}-${file.name}`,
+        name: file.name,
+        imageSrc
+      };
+    });
+
+    badgeObjectUrlsRef.current = nextBadgeImages.map((badgeImage) => badgeImage.imageSrc);
+    setBadgeImages(nextBadgeImages);
   }
 
   function handleDownload() {
@@ -171,8 +198,28 @@ export default function App() {
           />
         </div>
 
+        <fieldset className="field badge-fieldset">
+          <legend>バッジ画像</legend>
+          <p className="badge-help">ローカルのバッジ画像を最大4枚まで横並びで追加できます。</p>
+          <label htmlFor="badgeImages">バッジ画像を選ぶ</label>
+          <input
+            id="badgeImages"
+            type="file"
+            accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+            multiple
+            onChange={(event) => handleBadgeImageChange(event.target.files)}
+          />
+          <ul className="badge-list" aria-live="polite">
+            {badgeImages.length === 0 ? (
+              <li>選択中のバッジはありません。</li>
+            ) : (
+              badgeImages.map((badgeImage) => <li key={badgeImage.id}>{badgeImage.name}</li>)
+            )}
+          </ul>
+        </fieldset>
+
         {(
-          Object.keys(fieldLabels) as FieldKey[]
+          Object.keys(fieldLabels) as TextFieldKey[]
         ).map((key) => (
           <div className="field" key={key}>
             <label htmlFor={key}>{fieldLabels[key]}</label>
