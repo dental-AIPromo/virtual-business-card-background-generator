@@ -43,6 +43,7 @@ export type TemplateDefinition = {
   badges: {
     x: number;
     y: number;
+    areaWidth: number;
     width: number;
     maxHeight: number;
     gap: number;

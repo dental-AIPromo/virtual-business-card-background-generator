@@ -55,7 +55,7 @@ async function drawBadges(
     return;
   }
 
-  const availableWidth = template.overlay.width - template.badges.x * 2;
+  const availableWidth = template.badges.areaWidth;
   const gap = template.badges.gap;
   const badgeSlotWidth = Math.min(
     template.badges.width,
@@ -83,7 +83,7 @@ async function drawBadges(
     };
   });
 
-  const startX = template.overlay.x + template.badges.x;
+  const startX = template.badges.x;
 
   let currentX = startX;
   badgeLayouts.forEach(({ image, width, height }) => {
