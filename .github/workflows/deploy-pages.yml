@@ -7,9 +7,6 @@ on:
       - dev
   workflow_dispatch:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 permissions:
   contents: read
   pages: write
@@ -25,19 +22,19 @@ jobs:
 
     steps:
       - name: Checkout production source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: main
           path: main-src
 
       - name: Checkout preview source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: dev
           path: dev-src
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
@@ -75,7 +72,7 @@ jobs:
           cp -R dev-src/dist/. site/dev/
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./site
 
@@ -89,4 +86,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
