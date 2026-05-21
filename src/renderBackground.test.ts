@@ -118,7 +118,7 @@ describe("drawTemplate", () => {
     expect(scratchDrawImage).toHaveBeenCalledTimes(9);
     const badgeCalls = scratchDrawImage.mock.calls.slice(-4);
     expect(badgeCalls).toHaveLength(4);
-    expect(badgeCalls[0][5]).toBe(60);
+    expect(badgeCalls[0][5]).toBe(50);
     expect(badgeCalls[0][5]).toBeLessThan(badgeCalls[1][5]);
     expect(badgeCalls[1][5]).toBeLessThan(badgeCalls[2][5]);
     expect(badgeCalls[2][5]).toBeLessThan(badgeCalls[3][5]);
