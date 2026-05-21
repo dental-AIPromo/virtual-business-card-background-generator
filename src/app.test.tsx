@@ -17,6 +17,11 @@ describe("App", () => {
     expect(screen.getByLabelText("背景画像")).toBeInTheDocument();
     expect(screen.getByText("バッジ画像")).toBeInTheDocument();
     expect(screen.getByLabelText("バッジ画像を選ぶ")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "ローカルのバッジ画像を最大4枚まで横並びで追加できます。複数選択する場合は Ctrl または Shift を押しながら選択してください。"
+      )
+    ).toBeInTheDocument();
     expect(screen.getByText("選択中のバッジはありません。")).toBeInTheDocument();
     expect(screen.getByLabelText("部署名")).toBeInTheDocument();
     expect(screen.getByLabelText("役職名")).toBeInTheDocument();
