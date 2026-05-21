@@ -6,6 +6,9 @@ Object.defineProperty(HTMLCanvasElement.prototype, "getContext", {
     drawImage: () => undefined,
     fillRect: () => undefined,
     fillText: () => undefined,
+    getImageData: (_x: number, _y: number, width: number, height: number) => ({
+      data: new Uint8ClampedArray(width * height * 4)
+    }),
     measureText: (text: string) => ({ width: text.length * 10 }),
     set fillStyle(_value: string) {
     },
@@ -32,6 +35,10 @@ class MockImage {
   decoding = "async";
   onload: null | (() => void) = null;
   onerror: null | (() => void) = null;
+  width = 365;
+  height = 254;
+  naturalWidth = 365;
+  naturalHeight = 254;
   private currentSrc = "";
 
   get src() {

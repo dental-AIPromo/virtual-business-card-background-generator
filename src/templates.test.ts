@@ -15,6 +15,20 @@ describe("templates", () => {
       background: {
         width: 1920,
         height: 1080
+      },
+      overlay: {
+        x: 20,
+        y: 250,
+        width: 600,
+        height: 470
+      },
+      badges: {
+        x: 50,
+        y: 735,
+        areaWidth: 650,
+        width: 190,
+        gap: 8,
+        maxCount: 4
       }
     });
     expect(template.fields.department.fontSize).toBe(30);

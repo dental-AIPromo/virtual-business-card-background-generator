@@ -1,8 +1,10 @@
+import { detectCropBounds } from "./badgeCrop";
 import { buildRenderModel } from "./renderModel";
 import { fitTextToField } from "./textLayout";
-import type { FormValues, TemplateDefinition } from "./types";
+import type { BadgeImageSource, FormValues, TemplateDefinition } from "./types";
 
 const imageCache = new Map<string, HTMLImageElement>();
+const badgeCropCache = new Map<string, ReturnType<typeof detectCropBounds>>();
 
 async function loadImage(src: string): Promise<HTMLImageElement> {
   const cached = imageCache.get(src);
@@ -44,9 +46,97 @@ async function ensureFontReady(template: TemplateDefinition): Promise<void> {
   await document.fonts.ready;
 }
 
+function getBadgeCropBounds(image: HTMLImageElement, src: string) {
+  const cached = badgeCropCache.get(src);
+
+  if (cached) {
+    return cached;
+  }
+
+  const width = image.naturalWidth || image.width;
+  const height = image.naturalHeight || image.height;
+  const scratchCanvas = document.createElement("canvas");
+  const scratchContext = scratchCanvas.getContext("2d");
+
+  if (!scratchContext) {
+    return {
+      x: 0,
+      y: 0,
+      width,
+      height
+    };
+  }
+
+  scratchCanvas.width = width;
+  scratchCanvas.height = height;
+  scratchContext.drawImage(image, 0, 0, width, height);
+  const imageData = scratchContext.getImageData(0, 0, width, height);
+  const bounds = detectCropBounds(imageData.data, width, height);
+  badgeCropCache.set(src, bounds);
+  return bounds;
+}
+
+async function drawBadges(
+  ctx: CanvasRenderingContext2D,
+  badgeImages: BadgeImageSource[],
+  template: TemplateDefinition
+): Promise<void> {
+  const selectedBadges = badgeImages.slice(0, template.badges.maxCount);
+
+  if (selectedBadges.length === 0) {
+    return;
+  }
+
+  const availableWidth = template.badges.areaWidth;
+  const gap = template.badges.gap;
+  const badgeSlotWidth = Math.min(
+    template.badges.width,
+    Math.floor((availableWidth - gap * (selectedBadges.length - 1)) / selectedBadges.length)
+  );
+
+  const loadedBadges = await Promise.all(
+    selectedBadges.map(async (badgeImage) => ({
+      badgeImage,
+      image: await loadImage(badgeImage.imageSrc)
+    }))
+  );
+
+  const badgeLayouts = loadedBadges.map(({ badgeImage, image }) => {
+    const cropBounds = getBadgeCropBounds(image, badgeImage.imageSrc);
+    const width = badgeSlotWidth;
+    const height = Math.round((width * cropBounds.height) / cropBounds.width);
+
+    return {
+      image,
+      cropBounds,
+      width,
+      height
+    };
+  });
+
+  const startX = template.badges.x;
+
+  let currentX = startX;
+  badgeLayouts.forEach(({ image, cropBounds, width, height }) => {
+    ctx.drawImage(
+      image,
+      cropBounds.x,
+      cropBounds.y,
+      cropBounds.width,
+      cropBounds.height,
+      currentX,
+      template.badges.y,
+      width,
+      height
+    );
+    currentX += width + gap;
+  });
+}
+
 export async function drawTemplate(
   canvas: HTMLCanvasElement,
   backgroundImageSrc: string,
+  badgeImages: BadgeImageSource[],
   values: FormValues,
   template: TemplateDefinition,
   isCurrent: () => boolean = () => true
@@ -98,6 +188,8 @@ export async function drawTemplate(
       );
     });
   }
+
+  await drawBadges(ctx, badgeImages, template);
 
   if (!isCurrent()) {
     throw new Error("A newer preview render is already in progress");
