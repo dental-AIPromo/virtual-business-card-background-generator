@@ -6,6 +6,9 @@ Object.defineProperty(HTMLCanvasElement.prototype, "getContext", {
     drawImage: () => undefined,
     fillRect: () => undefined,
     fillText: () => undefined,
+    getImageData: (_x: number, _y: number, width: number, height: number) => ({
+      data: new Uint8ClampedArray(width * height * 4)
+    }),
     measureText: (text: string) => ({ width: text.length * 10 }),
     set fillStyle(_value: string) {
     },

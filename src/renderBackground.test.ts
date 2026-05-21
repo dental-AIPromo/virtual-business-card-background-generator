@@ -55,6 +55,9 @@ describe("drawTemplate", () => {
       drawImage: scratchDrawImage,
       fillRect: vi.fn(),
       fillText: vi.fn(),
+      getImageData: vi.fn(() => ({
+        data: new Uint8ClampedArray(365 * 254 * 4)
+      })),
       measureText: vi.fn((text: string) => ({ width: text.length * 10 })),
       set fillStyle(_value: string) {
       },
@@ -112,14 +115,14 @@ describe("drawTemplate", () => {
       createElementSpy.mockRestore();
     }
 
-    expect(scratchDrawImage).toHaveBeenCalledTimes(5);
-    const badgeCalls = scratchDrawImage.mock.calls.slice(1, 5);
+    expect(scratchDrawImage).toHaveBeenCalledTimes(9);
+    const badgeCalls = scratchDrawImage.mock.calls.slice(-4);
     expect(badgeCalls).toHaveLength(4);
-    expect(badgeCalls[0][1]).toBe(55);
-    expect(badgeCalls[0][1]).toBeLessThan(badgeCalls[1][1]);
-    expect(badgeCalls[1][1]).toBeLessThan(badgeCalls[2][1]);
-    expect(badgeCalls[2][1]).toBeLessThan(badgeCalls[3][1]);
-    expect(badgeCalls.every((call) => call[2] === 735)).toBe(true);
+    expect(badgeCalls[0][5]).toBe(60);
+    expect(badgeCalls[0][5]).toBeLessThan(badgeCalls[1][5]);
+    expect(badgeCalls[1][5]).toBeLessThan(badgeCalls[2][5]);
+    expect(badgeCalls[2][5]).toBeLessThan(badgeCalls[3][5]);
+    expect(badgeCalls.every((call) => call[6] === 735)).toBe(true);
     expect(previewContext.drawImage).toHaveBeenCalledTimes(1);
   });
 });

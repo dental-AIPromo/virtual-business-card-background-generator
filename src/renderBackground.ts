@@ -1,8 +1,10 @@
+import { detectCropBounds } from "./badgeCrop";
 import { buildRenderModel } from "./renderModel";
 import { fitTextToField } from "./textLayout";
 import type { BadgeImageSource, FormValues, TemplateDefinition } from "./types";
 
 const imageCache = new Map<string, HTMLImageElement>();
+const badgeCropCache = new Map<string, ReturnType<typeof detectCropBounds>>();
 
 async function loadImage(src: string): Promise<HTMLImageElement> {
   const cached = imageCache.get(src);
@@ -44,6 +46,36 @@ async function ensureFontReady(template: TemplateDefinition): Promise<void> {
   await document.fonts.ready;
 }
 
+function getBadgeCropBounds(image: HTMLImageElement, src: string) {
+  const cached = badgeCropCache.get(src);
+
+  if (cached) {
+    return cached;
+  }
+
+  const width = image.naturalWidth || image.width;
+  const height = image.naturalHeight || image.height;
+  const scratchCanvas = document.createElement("canvas");
+  const scratchContext = scratchCanvas.getContext("2d");
+
+  if (!scratchContext) {
+    return {
+      x: 0,
+      y: 0,
+      width,
+      height
+    };
+  }
+
+  scratchCanvas.width = width;
+  scratchCanvas.height = height;
+  scratchContext.drawImage(image, 0, 0, width, height);
+  const imageData = scratchContext.getImageData(0, 0, width, height);
+  const bounds = detectCropBounds(imageData.data, width, height);
+  badgeCropCache.set(src, bounds);
+  return bounds;
+}
+
 async function drawBadges(
   ctx: CanvasRenderingContext2D,
   badgeImages: BadgeImageSource[],
@@ -69,15 +101,14 @@ async function drawBadges(
     }))
   );
 
-  const badgeLayouts = loadedBadges.map(({ image }) => {
-    const sourceWidth = image.naturalWidth || image.width;
-    const sourceHeight = image.naturalHeight || image.height;
-    const widthByHeight = Math.floor((template.badges.maxHeight * sourceWidth) / sourceHeight);
-    const width = Math.min(badgeSlotWidth, widthByHeight);
-    const height = Math.round((width * sourceHeight) / sourceWidth);
+  const badgeLayouts = loadedBadges.map(({ badgeImage, image }) => {
+    const cropBounds = getBadgeCropBounds(image, badgeImage.imageSrc);
+    const width = badgeSlotWidth;
+    const height = Math.round((width * cropBounds.height) / cropBounds.width);
 
     return {
       image,
+      cropBounds,
       width,
       height
     };
@@ -86,8 +117,18 @@ async function drawBadges(
   const startX = template.badges.x;
 
   let currentX = startX;
-  badgeLayouts.forEach(({ image, width, height }) => {
-    ctx.drawImage(image, currentX, template.badges.y, width, height);
+  badgeLayouts.forEach(({ image, cropBounds, width, height }) => {
+    ctx.drawImage(
+      image,
+      cropBounds.x,
+      cropBounds.y,
+      cropBounds.width,
+      cropBounds.height,
+      currentX,
+      template.badges.y,
+      width,
+      height
+    );
     currentX += width + gap;
   });
 }

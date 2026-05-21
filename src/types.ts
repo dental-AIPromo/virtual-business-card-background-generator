@@ -45,7 +45,6 @@ export type TemplateDefinition = {
     y: number;
     areaWidth: number;
     width: number;
-    maxHeight: number;
     gap: number;
     maxCount: number;
   };
