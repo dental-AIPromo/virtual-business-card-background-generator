@@ -200,7 +200,10 @@ export default function App() {
 
         <fieldset className="field badge-fieldset">
           <legend>バッジ画像</legend>
-          <p className="badge-help">ローカルのバッジ画像を最大4枚まで横並びで追加できます。</p>
+          <p className="badge-help">
+            ローカルのバッジ画像を最大4枚まで横並びで追加できます。複数選択する場合は
+            Ctrl または Shift を押しながら選択してください。
+          </p>
           <label htmlFor="badgeImages">バッジ画像を選ぶ</label>
           <input
             id="badgeImages"
