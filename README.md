@@ -3,7 +3,8 @@
 Copyright 2026 エンパワーヘルスケア株式会社
 
 このリポジトリは公開ページ配信用です。  
-公開ページ: [https://dental-aipromo.github.io/virtual-business-card-background-generator/](https://dental-aipromo.github.io/virtual-business-card-background-generator/)
+公開ページ: [https://dental-aipromo.github.io/virtual-business-card-background-generator/](https://dental-aipromo.github.io/virtual-business-card-background-generator/)  
+配信元ファイルは `docs/` 配下にあります。
 
 ## できること
 
