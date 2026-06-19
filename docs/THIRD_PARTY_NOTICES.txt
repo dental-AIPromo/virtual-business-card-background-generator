@@ -1,0 +1,4 @@
+This repository's published bundle includes React code in `docs/assets/index-BsyVD1d0.js`.
+The bundle contains React license comments indicating that React source code is licensed under the MIT license.
+
+The exact React version and any additional bundled dependencies are not documented in this repository.
