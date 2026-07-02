@@ -24,52 +24,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout production source
+      - name: Checkout production bundle
         uses: actions/checkout@v5
         with:
           ref: main
           path: main-src
 
-      - name: Checkout preview source
+      - name: Checkout preview bundle
         uses: actions/checkout@v5
         with:
           ref: dev
           path: dev-src
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: |
-            main-src/package-lock.json
-            dev-src/package-lock.json
-
-      - name: Install production dependencies
-        working-directory: ./main-src
-        run: npm ci
-
-      - name: Build production site
-        working-directory: ./main-src
-        env:
-          VITE_APP_BASE: /virtual-business-card-background-generator/
-        run: npm run verify
-
-      - name: Install preview dependencies
-        working-directory: ./dev-src
-        run: npm ci
-
-      - name: Build preview site
-        working-directory: ./dev-src
-        env:
-          VITE_APP_BASE: /virtual-business-card-background-generator/dev/
-        run: npm run verify
-
       - name: Assemble Pages artifact
+        shell: bash
         run: |
           mkdir -p site/dev
-          cp -R main-src/dist/. site/
-          cp -R dev-src/dist/. site/dev/
+          cp -R main-src/docs/. site/
+          cp -R dev-src/docs/. site/dev/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
