@@ -4,7 +4,7 @@ Copyright 2026 エンパワーヘルスケア株式会社
 
 このリポジトリは公開ページ配信用です。  
 公開ページ: [https://dental-aipromo.github.io/virtual-business-card-background-generator/](https://dental-aipromo.github.io/virtual-business-card-background-generator/)  
-配信元ファイルは `docs/` 配下にあります。
+GitHub Pages は Actions deploy で配信します。`main` と `dev` の `docs/` を組み立てて、それぞれ `/` と `/dev/` に公開します。
 
 ## できること
 
@@ -31,6 +31,7 @@ Copyright 2026 エンパワーヘルスケア株式会社
 
 - 現時点でこのリポジトリに確認できる配布物は `docs/` 配下の静的ファイルです
 - `package.json`、`src/`、依存ロックファイル、ビルド手順は確認できません
+- Pages の公開は `.github/workflows/deploy-pages.yml` で行います
 - `docs/assets/index-BsyVD1d0.js` には React の MIT ライセンス表示が含まれるため、第三者ライセンス案内は `docs/THIRD_PARTY_NOTICES.txt` を参照してください
 
 ## ライセンス
